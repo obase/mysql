@@ -15,6 +15,7 @@ type Rec struct {
 }
 
 func TestScan(t *testing.T) {
+	Init()
 	demo := Get("demo")
 	ret, err := demo.ScanAll("select now(),123,'abc'", func(row *sql.Rows) (interface{}, error) {
 		rec := new(Rec)
@@ -32,6 +33,7 @@ func TestScan(t *testing.T) {
 }
 
 func TestScanOne(t *testing.T) {
+	Init()
 	demo := Get("demo")
 	ret, err := demo.ScanOne("select now(),123,'abc'", func(row *sql.Rows) (interface{}, error) {
 		rec := new(Rec)
@@ -47,6 +49,7 @@ func TestScanOne(t *testing.T) {
 }
 
 func TestScanOne2(t *testing.T) {
+	Init()
 	demo := Get("demo")
 	var rec Rec
 	ok, err := demo.ScanOne2("select now(),123,'abc' from t1 where 1> 2", []interface{}{&rec.Time, &rec.Int, &rec.String})
@@ -60,6 +63,7 @@ func TestScanOne2(t *testing.T) {
 }
 
 func TestBeginTx(t *testing.T) {
+	Init()
 	demo := Get("demo")
 	tx, err := demo.BeginTx(context.Background())
 

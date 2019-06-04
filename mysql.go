@@ -90,7 +90,7 @@ var (
 var ErrDupKey = errors.New("duplicate client name")
 
 // 注意,该方法非线程安全
-func Init(name string, db *sql.DB, def bool) (err error) {
+func Setup(name string, db *sql.DB, def bool) (err error) {
 
 	_, ok := Clients[name]
 	if ok {
