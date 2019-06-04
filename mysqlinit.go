@@ -11,8 +11,9 @@ const DriverName = "mysql"
 const DriverSourceNameFormat = "%s:%s@tcp(%s)/%s?parseTime=1&loc=Local"
 const CKEY = "mysql"
 
-// 对接conf.yml, 读取原redis相关配置
+// 对接conf.yml, 读取原mysql相关配置
 func init() {
+	conf.Init()
 	configs, ok := conf.GetSlice(CKEY)
 	if !ok || len(configs) == 0 {
 		return
