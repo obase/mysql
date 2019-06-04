@@ -3,7 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"golang.org/x/net/context"
+	"context"
 	"testing"
 	"time"
 )
