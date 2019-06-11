@@ -81,55 +81,55 @@ func Extv(v interface{}) interface{} {
 	}
 }
 
-func BoolRow(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func BoolRSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(bool)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func IntRow(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func IntRSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(int)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Int32Row(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func Int32RSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(int32)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Int64Row(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func Int64RSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(int64)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Float32Row(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func Float32RSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(float32)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Float64Row(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func Float64RSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(float64)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func StringRow(rows *sql.Rows, cache *[]interface{}) (interface{}, error) {
+func StringRSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(string)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func TimeRow(rows *sql.Rows) (interface{}, error) {
+func TimeRSF(rows *sql.Rows) (interface{}, error) {
 	ret := new(time.Time)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func SliceRow(ks ...PType) ScanRowFunc {
+func SliceRSF(ks ...PType) ScanRowFunc {
 	// 下述在整个扫描
 	ln := len(ks)
 	return func(rows *sql.Rows) (interface{}, error) {
@@ -149,7 +149,7 @@ func SliceRow(ks ...PType) ScanRowFunc {
 }
 
 /*name1,type1,name2,type2...*/
-func MapRow(pairs ...interface{}) ScanRowFunc {
+func MapRSF(pairs ...interface{}) ScanRowFunc {
 	pln := len(pairs)
 	len := pln / 2
 
