@@ -30,7 +30,7 @@ func (m *mysqlImpl) BeginTx(ctx context.Context) (ret Tx, err error) {
 
 func (m *mysqlImpl) Scan(psql string, srf ScanRowsFunc, args ...interface{}) (ret interface{}, err error) {
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(psql, args...)
+	rows, err := m.DB.Query(psql, args...)
 
 	if err != nil {
 		return
@@ -43,7 +43,7 @@ func (m *mysqlImpl) Scan(psql string, srf ScanRowsFunc, args ...interface{}) (re
 func (m *mysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(psql, args...)
+	rows, err := m.DB.Query(psql, args...)
 	if err != nil {
 		return
 	}
@@ -75,7 +75,7 @@ func (m *mysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (
 func (m *mysqlImpl) ScanOne2(psql string, to interface{}, args ...interface{}) (ok bool, err error) {
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(psql, args...)
+	rows, err := m.DB.Query(psql, args...)
 	if err != nil {
 		return
 	}
@@ -99,7 +99,7 @@ func (m *mysqlImpl) ScanOne2(psql string, to interface{}, args ...interface{}) (
 func (m *mysqlImpl) ScanOne(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(psql, args...)
+	rows, err := m.DB.Query(psql, args...)
 	if err != nil {
 		return
 	}
@@ -124,7 +124,7 @@ func (m *mysqlImpl) ScanRange(psql string, srf ScanRowFunc, offset int, limit in
 	args = append(args, offset, limit)
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(meta.LimitPsql, args...)
+	rows, err := m.DB.Query(meta.LimitPsql, args...)
 	if err != nil {
 		return
 	}
@@ -167,7 +167,7 @@ func (m *mysqlImpl) ScanPage(psql string, srf ScanRowFunc, offset int, limit int
 	args = append(args, offset, limit)
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(dataPsql, args...)
+	rows, err := m.DB.Query(dataPsql, args...)
 	if err != nil {
 		return
 	}
@@ -213,7 +213,7 @@ func (m *mysqlImpl) scanPageTotal(psql string, meta *SqlMeta, args ...interface{
 	}
 
 	// Kingshared禁止预编译与事务
-	rows, err := m.Query(meta.TotalPsql, args...)
+	rows, err := m.DB.Query(meta.TotalPsql, args...)
 	if err != nil {
 		return
 	}
@@ -227,12 +227,12 @@ func (m *mysqlImpl) scanPageTotal(psql string, meta *SqlMeta, args ...interface{
 }
 
 func (m *mysqlImpl) Exec(psql string, args ...interface{}) (ret sql.Result, err error) {
-	ret, err = m.Exec(psql, args...)
+	ret, err = m.DB.Exec(psql, args...)
 	return
 }
 
 func (m *mysqlImpl) ExecBatch(psql string, argsList ...interface{}) (retList []sql.Result, err error) {
-	tx, err := m.Begin()
+	tx, err := m.DB.Begin()
 	if err != nil {
 		return
 	}
