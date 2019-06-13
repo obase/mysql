@@ -113,8 +113,8 @@ func Setup(name string, db *sql.DB, def bool) (err error) {
 }
 
 func Get(name string) Mysql {
-	if name == "" {
-		return Default
+	if rt, ok := Clients[name]; ok {
+		return rt
 	}
-	return Clients[name]
+	return nil
 }
