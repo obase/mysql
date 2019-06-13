@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"strings"
 )
 
 const InitialCapacity = 256
@@ -99,7 +100,11 @@ func Setup(name string, db *sql.DB, def bool) (err error) {
 	}
 
 	client := &mysqlImpl{DB: db}
-	Clients[name] = client
+	for _, k := range strings.Split(name, ",") {
+		if k = strings.TrimSpace(k); len(k) > 0 {
+			Clients[k] = client
+		}
+	}
 	if def {
 		Default = client
 	}
