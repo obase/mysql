@@ -65,7 +65,7 @@ func (m *mysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (
 			if err != nil {
 				return
 			}
-			slice = reflect.AppendSlice(slice, reflect.ValueOf(val))
+			slice = reflect.Append(slice, reflect.ValueOf(val))
 		}
 		ret = slice.Interface()
 	}
@@ -146,7 +146,7 @@ func (m *mysqlImpl) ScanRange(psql string, srf ScanRowFunc, offset int, limit in
 			if err != nil {
 				return
 			}
-			slice = reflect.AppendSlice(slice, reflect.ValueOf(val))
+			slice = reflect.Append(slice, reflect.ValueOf(val))
 		}
 		ret = slice.Interface()
 	}
@@ -190,7 +190,7 @@ func (m *mysqlImpl) ScanPage(psql string, srf ScanRowFunc, offset int, limit int
 			if err != nil {
 				return
 			}
-			slice = reflect.AppendSlice(slice, reflect.ValueOf(val))
+			slice = reflect.Append(slice, reflect.ValueOf(val))
 		}
 		ret = slice.Interface()
 		dlen = slice.Len()
