@@ -6,48 +6,48 @@ import (
 	"time"
 )
 
-type PType uint
+type Type uint
 
 const (
-	Bool PType = iota
+	Bool Type = iota
 	Int
 	Int32
 	Int64
 	Float32
 	Float64
 	String
-	Time
+	Timep
 	Bytes
 )
 
-func Newp(v PType) interface{} {
+func Newp(v Type) interface{} {
 	switch v {
 	case Bool:
-		ret := (*bool)(nil)
+		var ret bool
 		return &ret
 	case Int:
-		ret := (*int)(nil)
+		var ret int
 		return &ret
 	case Int32:
-		ret := (*int32)(nil)
+		var ret int32
 		return &ret
 	case Int64:
-		ret := (*int64)(nil)
+		var ret int64
 		return &ret
 	case Float32:
-		ret := (*float32)(nil)
+		var ret float32
 		return &ret
 	case Float64:
-		ret := (*float64)(nil)
+		var ret float64
 		return &ret
 	case String:
-		ret := (*string)(nil)
+		var ret string
 		return &ret
-	case Time:
+	case Timep:
 		ret := (*time.Time)(nil)
 		return &ret
 	case Bytes:
-		ret := (*[]byte)(nil)
+		var ret []byte
 		return &ret
 	default:
 		panic(fmt.Errorf("newp failed for: %#v", v))
@@ -56,19 +56,19 @@ func Newp(v PType) interface{} {
 
 func Extv(v interface{}) interface{} {
 	switch v := v.(type) {
-	case **bool:
+	case *bool:
 		return *v
-	case **int:
+	case *int:
 		return *v
-	case **int32:
+	case *int32:
 		return *v
-	case **int64:
+	case *int64:
 		return *v
-	case **float32:
+	case *float32:
 		return *v
-	case **float64:
+	case *float64:
 		return *v
-	case **string:
+	case *string:
 		return *v
 	case **time.Time:
 		return *v
@@ -81,55 +81,55 @@ func Extv(v interface{}) interface{} {
 	}
 }
 
-func BoolRSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(bool)
+func BoolR(rows *sql.Rows) (interface{}, error) {
+	var ret bool
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func IntRSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(int)
+func IntR(rows *sql.Rows) (interface{}, error) {
+	var ret int
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Int32RSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(int32)
+func Int32R(rows *sql.Rows) (interface{}, error) {
+	var ret int32
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Int64RSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(int64)
+func Int64R(rows *sql.Rows) (interface{}, error) {
+	var ret int64
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Float32RSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(float32)
+func Float32R(rows *sql.Rows) (interface{}, error) {
+	var ret float32
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func Float64RSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(float64)
+func Float64R(rows *sql.Rows) (interface{}, error) {
+	var ret float64
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func StringRSF(rows *sql.Rows) (interface{}, error) {
-	ret := new(string)
+func StringR(rows *sql.Rows) (interface{}, error) {
+	var ret string
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func TimeRSF(rows *sql.Rows) (interface{}, error) {
+func TimepR(rows *sql.Rows) (interface{}, error) {
 	ret := new(time.Time)
 	err := rows.Scan(&ret)
 	return ret, err
 }
 
-func SliceRSF(ks ...PType) ScanRowFunc {
+func SliceR(ks ...Type) ScanRowFunc {
 	// 下述在整个扫描
 	ln := len(ks)
 	return func(rows *sql.Rows) (interface{}, error) {
@@ -149,17 +149,17 @@ func SliceRSF(ks ...PType) ScanRowFunc {
 }
 
 /*name1,type1,name2,type2...*/
-func MapRSF(pairs ...interface{}) ScanRowFunc {
+func MapR(pairs ...interface{}) ScanRowFunc {
 	pln := len(pairs)
 	len := pln / 2
 
 	ks := make([]string, len)
-	ts := make([]PType, len)
+	ts := make([]Type, len)
 
 	idx := 0
 	for i := 1; i < pln; i += 2 {
 		ks[idx] = pairs[i-1].(string)
-		ts[idx] = pairs[i].(PType)
+		ts[idx] = pairs[i].(Type)
 		idx++
 	}
 
