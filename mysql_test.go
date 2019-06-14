@@ -1,9 +1,9 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
-	"context"
 	"testing"
 	"time"
 )
@@ -16,19 +16,11 @@ type Rec struct {
 
 func TestScan(t *testing.T) {
 	demo := Get("demo")
-	ret, err := demo.ScanAll("select now(),123,'abc'", func(row *sql.Rows) (interface{}, error) {
-		rec := new(Rec)
-		if err := row.Scan(&rec.Time, &rec.Int, &rec.String); err != nil {
-			return nil, err
-		}
-		return rec, nil
-	})
+	ret, err := demo.ScanOne("select 123", Int32R)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, r := range ret.([]*Rec) {
-		fmt.Printf("%+v\n", *r)
-	}
+	fmt.Println(ret)
 }
 
 func TestScanOne(t *testing.T) {
