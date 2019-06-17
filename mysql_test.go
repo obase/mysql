@@ -62,3 +62,16 @@ func TestBeginTx(t *testing.T) {
 	fmt.Println(rt)
 	tx.Commit()
 }
+
+func TestScanOne3(t *testing.T) {
+	demo := Get("demo")
+	rt, err := demo.ScanAll("select id, person_id from account", SliceR(String, String))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if rt != nil {
+		for _, rw := range rt.([][]interface{}){
+			fmt.Println(rw)
+		}
+	}
+}

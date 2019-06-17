@@ -3,12 +3,14 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/obase/conf"
+	_ "github.com/ziutek/mymysql/godrv"
 )
 
-const DriverName = "mysql"
-const DriverSourceNameFormat = "%s:%s@tcp(%s)/%s?parseTime=1&loc=Local"
+// Kingshard不支持go-sql-driver
+//const DriverName = "mysql"
+//const DriverSourceNameFormat = "%s:%s@tcp(%s)/%s?parseTime=1&loc=Local"
+
 const CKEY = "mysql"
 
 // 对接conf.yml, 读取原mysql相关配置
@@ -35,7 +37,9 @@ func init() {
 			connMaxLifetime, ok := conf.ElemDuration(config, "connMaxLifetime")
 			defalt, ok := conf.ElemBool(config, "default")
 
-			db, err := sql.Open(DriverName, fmt.Sprintf(DriverSourceNameFormat, username, password, address, database))
+			// kingshard不支持go-sql-driver
+			//db, err := sql.Open(DriverName, fmt.Sprintf(DriverSourceNameFormat, username, password, address, database))
+			db, err := sql.Open("mymysql", fmt.Sprintf("tcp:%s*%s/%s/%s", address, database, username, password))
 			if err != nil {
 				panic(err)
 			}
