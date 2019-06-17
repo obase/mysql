@@ -242,9 +242,9 @@ func (m *mysqlImpl) ExecBatch(psql string, argsList ...interface{}) (retList []s
 	for i, args := range argsList {
 		switch args := args.(type) {
 		case []interface{}:
-			ret, err = m.Exec(psql, args...)
+			ret, err = tx.Exec(psql, args...)
 		default:
-			ret, err = m.Exec(psql, args)
+			ret, err = tx.Exec(psql, args)
 		}
 		if err != nil {
 			tx.Rollback()
