@@ -88,19 +88,19 @@ var (
 	Clients map[string]*mysqlImpl = make(map[string]*mysqlImpl, 8) //默认给8个
 )
 
-var ErrDupKey = errors.New("duplicate client name")
-
 // 注意,该方法非线程安全
 func Setup(name string, db *sql.DB, def bool) (err error) {
 
-	_, ok := Clients[name]
-	if ok {
-		err = ErrDupKey
-		return
+	keys := strings.Split(name, ",")
+	for _, k := range keys {
+		if _, ok := Clients[k]; ok {
+			err = errors.New("duplicate mysql key " + k)
+			return
+		}
 	}
 
 	client := &mysqlImpl{DB: db}
-	for _, k := range strings.Split(name, ",") {
+	for _, k := range keys {
 		Clients[k] = client
 	}
 	if def {
