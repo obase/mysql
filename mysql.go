@@ -84,8 +84,8 @@ func BeginTx(ctx context.Context) (Tx, error) {
 }
 
 var (
-	Default *mysqlImpl
-	Clients map[string]*mysqlImpl = make(map[string]*mysqlImpl, 8) //默认给8个
+	Default *MysqlImpl
+	Clients map[string]*MysqlImpl = make(map[string]*MysqlImpl, 8) //默认给8个
 )
 
 // 注意,该方法非线程安全
@@ -99,7 +99,7 @@ func Setup(name string, db *sql.DB, def bool) (err error) {
 		}
 	}
 
-	client := &mysqlImpl{DB: db}
+	client := &MysqlImpl{DB: db}
 	for _, k := range keys {
 		Clients[k] = client
 	}

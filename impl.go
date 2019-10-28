@@ -7,17 +7,17 @@ import (
 	"reflect"
 )
 
-type mysqlImpl struct {
+type MysqlImpl struct {
 	*sql.DB
 }
 
-func newMysql(db *sql.DB) *mysqlImpl {
-	return &mysqlImpl{
+func newMysql(db *sql.DB) *MysqlImpl {
+	return &MysqlImpl{
 		DB: db,
 	}
 }
 
-func (m *mysqlImpl) BeginTx(ctx context.Context) (ret Tx, err error) {
+func (m *MysqlImpl) BeginTx(ctx context.Context) (ret Tx, err error) {
 	tx, err := m.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return
@@ -28,7 +28,7 @@ func (m *mysqlImpl) BeginTx(ctx context.Context) (ret Tx, err error) {
 	return
 }
 
-func (m *mysqlImpl) Scan(psql string, srf ScanRowsFunc, args ...interface{}) (ret interface{}, err error) {
+func (m *MysqlImpl) Scan(psql string, srf ScanRowsFunc, args ...interface{}) (ret interface{}, err error) {
 	// Kingshared禁止预编译与事务
 	rows, err := m.DB.Query(psql, args...)
 
@@ -40,7 +40,7 @@ func (m *mysqlImpl) Scan(psql string, srf ScanRowsFunc, args ...interface{}) (re
 	return srf(rows)
 }
 
-func (m *mysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
+func (m *MysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
 
 	// Kingshared禁止预编译与事务
 	rows, err := m.DB.Query(psql, args...)
@@ -72,7 +72,7 @@ func (m *mysqlImpl) ScanAll(psql string, srf ScanRowFunc, args ...interface{}) (
 	return
 }
 
-func (m *mysqlImpl) ScanOne2(psql string, to interface{}, args ...interface{}) (ok bool, err error) {
+func (m *MysqlImpl) ScanOne2(psql string, to interface{}, args ...interface{}) (ok bool, err error) {
 
 	// Kingshared禁止预编译与事务
 	rows, err := m.DB.Query(psql, args...)
@@ -96,7 +96,7 @@ func (m *mysqlImpl) ScanOne2(psql string, to interface{}, args ...interface{}) (
 	return
 }
 
-func (m *mysqlImpl) ScanOne(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
+func (m *MysqlImpl) ScanOne(psql string, srf ScanRowFunc, args ...interface{}) (ret interface{}, err error) {
 
 	// Kingshared禁止预编译与事务
 	rows, err := m.DB.Query(psql, args...)
@@ -116,7 +116,7 @@ func (m *mysqlImpl) ScanOne(psql string, srf ScanRowFunc, args ...interface{}) (
 }
 
 /*如果源SQL没有limit子句,则直接拼到最后即可*/
-func (m *mysqlImpl) ScanRange(psql string, srf ScanRowFunc, offset int, limit int, args ...interface{}) (ret interface{}, err error) {
+func (m *MysqlImpl) ScanRange(psql string, srf ScanRowFunc, offset int, limit int, args ...interface{}) (ret interface{}, err error) {
 	meta := GetSqlMeta(psql)
 	if meta.LimitPsql == "" {
 		GenLimitSql(psql, meta)
@@ -153,7 +153,7 @@ func (m *mysqlImpl) ScanRange(psql string, srf ScanRowFunc, offset int, limit in
 	return
 }
 
-func (m *mysqlImpl) ScanPage(psql string, srf ScanRowFunc, offset int, limit int, sort string, desc bool, args ...interface{}) (tot int, ret interface{}, err error) {
+func (m *MysqlImpl) ScanPage(psql string, srf ScanRowFunc, offset int, limit int, sort string, desc bool, args ...interface{}) (tot int, ret interface{}, err error) {
 
 	aln := len(args)
 
@@ -206,7 +206,7 @@ func (m *mysqlImpl) ScanPage(psql string, srf ScanRowFunc, offset int, limit int
 	return
 }
 
-func (m *mysqlImpl) scanPageTotal(psql string, meta *SqlMeta, args ...interface{}) (ret int, err error) {
+func (m *MysqlImpl) scanPageTotal(psql string, meta *SqlMeta, args ...interface{}) (ret int, err error) {
 	// 查询总数
 	if meta.TotalPsql == "" {
 		GenTotalSql(psql, meta)
@@ -226,12 +226,12 @@ func (m *mysqlImpl) scanPageTotal(psql string, meta *SqlMeta, args ...interface{
 	return
 }
 
-func (m *mysqlImpl) Exec(psql string, args ...interface{}) (ret sql.Result, err error) {
+func (m *MysqlImpl) Exec(psql string, args ...interface{}) (ret sql.Result, err error) {
 	ret, err = m.DB.Exec(psql, args...)
 	return
 }
 
-func (m *mysqlImpl) ExecBatch(psql string, argsList ...interface{}) (retList []sql.Result, err error) {
+func (m *MysqlImpl) ExecBatch(psql string, argsList ...interface{}) (retList []sql.Result, err error) {
 	tx, err := m.DB.Begin()
 	if err != nil {
 		return
